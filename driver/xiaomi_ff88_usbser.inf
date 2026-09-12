@@ -1,0 +1,49 @@
+; Xiaomi factory USB 2717:FF88 -> usbser (COM port)
+; Unsigned. Prefer Zadig "USB Serial (CDC)" on Windows 10/11 if this INF is blocked.
+;
+; Hardware ID: USB\VID_2717&PID_FF88&REV_0100
+
+[Version]
+Signature   = "$Windows NT$"
+Class       = Ports
+ClassGuid   = {4D36E978-E325-11CE-BFC1-08002BE10318}
+Provider    = %ManufacturerName%
+DriverVer   = 09/12/2026,1.0.0.0
+PnpLockdown = 1
+
+[Manufacturer]
+%ManufacturerName% = DeviceList,NTamd64,NTarm64
+
+[DeviceList.NTamd64]
+%DeviceName% = ComPort, USB\VID_2717&PID_FF88
+%DeviceName% = ComPort, USB\VID_2717&PID_FF88&REV_0100
+
+[DeviceList.NTarm64]
+%DeviceName% = ComPort, USB\VID_2717&PID_FF88
+%DeviceName% = ComPort, USB\VID_2717&PID_FF88&REV_0100
+
+[ComPort]
+Include   = mdmcpq.inf
+CopyFiles = FakeModemCopyFileSection
+AddReg    = ComPort.AddReg
+
+[ComPort.AddReg]
+HKR,,PortDriver,,usbser.sys
+HKR,,EnumPropPages32,,"MsPorts.dll,SerialPortPropPageProvider"
+
+[ComPort.Services]
+Include    = mdmcpq.inf
+AddService = usbser, 0x00000002, LowerFilter_Service_Inst
+
+[DestinationDirs]
+DefaultDestDir = 12
+
+[SourceDisksNames]
+1 = %DiskName%
+
+[SourceDisksFiles]
+
+[Strings]
+ManufacturerName = "Xiaomi Inc."
+DeviceName      = "Xiaomi Factory USB Serial (2717:FF88)"
+DiskName        = "Xiaomi FF88 usbser"
